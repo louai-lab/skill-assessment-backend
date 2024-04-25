@@ -15,11 +15,13 @@ export const getAllNotes = async (req, res) => {
       notes = await Note.find().sort({ createdAt: -1 });
     }
 
+    const noteCount = notes.length;
+
     const { offset, limit } = req;
 
     notes = notes.slice(offset, offset + limit);
 
-    return res.status(201).json(notes);
+    return res.status(201).json({ notes, noteCount });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -28,12 +30,12 @@ export const getAllNotes = async (req, res) => {
 
 // Get one Note
 export const getOneNote = async (req, res) => {
-  const id = req.body.id;
+  const id = req.params.id;
+
+  // console.log(id);
 
   try {
-    const note = await Note.findOne({
-      _id: id,
-    });
+    const note = await Note.findById(id);
     return res.status(200).json(note);
   } catch (error) {
     console.log(error);
@@ -83,6 +85,8 @@ export const updateNote = async (req, res) => {
 //Delete a Note
 export const deleteNote = async (req, res) => {
   const id = req.body.id;
+
+  // console.log(id)
 
   try {
     const existingNote = await Note.findById(id);
