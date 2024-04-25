@@ -7,10 +7,22 @@ export const getAllNotes = async (req, res) => {
 
     let notes;
 
+    // if (search) {
+    //   const searchTerm = search.toLowerCase();
+    //   const filter = { title: { $regex: searchTerm, $options: "i" } };
+    //   notes = await Note.find(filter).sort({ createdAt: -1 });
+    // } else {
+    //   notes = await Note.find().sort({ createdAt: -1 });
+    // }
+
     if (search) {
-      const searchTerm = search.toLowerCase();
-      const filter = { title: { $regex: searchTerm, $options: "i" } };
-      notes = await Note.find(filter).sort({ createdAt: -1 });
+      const searchTerm = search.toLowerCase().trim();
+      if (searchTerm) {
+        const filter = { title: { $regex: searchTerm, $options: "i" } };
+        notes = await Note.find(filter).sort({ createdAt: -1 });
+      } else {
+        notes = [];
+      }
     } else {
       notes = await Note.find().sort({ createdAt: -1 });
     }
@@ -32,10 +44,12 @@ export const getAllNotes = async (req, res) => {
 export const getOneNote = async (req, res) => {
   const id = req.params.id;
 
-  // console.log(id);
-
   try {
     const note = await Note.findById(id);
+
+    if (!note) {
+      return res.status(401).json({ error: "Note not found" });
+    }
     return res.status(200).json(note);
   } catch (error) {
     console.log(error);
