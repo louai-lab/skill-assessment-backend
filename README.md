@@ -28,6 +28,17 @@ Environment variables:
 - MONGO_URI : mongodb+srv://louaibaghdadi27:JagRWyX8p2zfBb5y@cluster0.uitllam.mongodb.net/
   -FRONT_END_PATH : number for the front Port (3000)
 
+## Test
+
+- test Get Notes : NODE_OPTIONS=--experimental-vm-modules npx jest GetNotes.test.js
+
+- test Create Notes : NODE_OPTIONS=--experimental-vm-modules npx jest CreateNote.test.js
+
+- test Update Note : ---
+
+- test Delete Note :
+  NODE_OPTIONS=--experimental-vm-modules npx jest DeleteNote.test.js
+
 ## Contribution
 
 Contributions are welcome! Please fork the repository and submit pull requests.

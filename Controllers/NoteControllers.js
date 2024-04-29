@@ -7,14 +7,6 @@ export const getAllNotes = async (req, res) => {
 
     let notes;
 
-    // if (search) {
-    //   const searchTerm = search.toLowerCase();
-    //   const filter = { title: { $regex: searchTerm, $options: "i" } };
-    //   notes = await Note.find(filter).sort({ createdAt: -1 });
-    // } else {
-    //   notes = await Note.find().sort({ createdAt: -1 });
-    // }
-
     if (search) {
       const searchTerm = search.toLowerCase().trim();
       if (searchTerm) {
@@ -33,7 +25,7 @@ export const getAllNotes = async (req, res) => {
 
     notes = notes.slice(offset, offset + limit);
 
-    return res.status(201).json({ notes, noteCount });
+    return res.status(200).json({ notes, noteCount });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -63,7 +55,7 @@ export const createNote = async (req, res) => {
 
   try {
     if (!title || !content) {
-      return res.status(400).json({ error: "All fiels are required" });
+      return res.status(400).json({ error: "All fields are required" });
     }
 
     const newNote = await Note.create({
@@ -83,7 +75,14 @@ export const updateNote = async (req, res) => {
   const { title, content } = req.body;
 
   try {
+    if (!id) {
+      return res.status(400).json({ error: "Note ID is required" });
+    }
     const existingNote = await Note.findById(id);
+
+    if (!existingNote) {
+      return res.status(404).json({ error: "Note not found" });
+    }
 
     if (title) existingNote.title = title;
     if (content) existingNote.content = content;

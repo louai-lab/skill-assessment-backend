@@ -28,3 +28,5 @@ app.listen(PORT, () => {
     ("ERROR: issue reading port from process.env. Continue with caution! ...");
   }
 });
+
+export default app;
